@@ -10,6 +10,7 @@ buildscript {
 
 plugins {
   id "org.sonarqube" version "3.3"
+  id 'jacoco'
 }
 
 apply plugin: 'java'
@@ -44,6 +45,7 @@ javadoc {
     options.locale = 'en_US'
     title = 'zxcvbn4j ' + version + ' API'
 }
+
 
 // Turning off doclint in JDK 8 Javadoc
 // ref : http://blog.joda.org/2014/02/turning-off-doclint-in-jdk-8-javadoc.html
@@ -145,17 +147,37 @@ uploadArchives {
     }
 }
 
+
+
+
 test {
     maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
     forkEvery = 4
     testLogging.showStandardStreams = true
+    finalizedBy jacocoTestReport // report is always generated after tests run   
 }
+
+
+
+
+
+
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
+        reports {
+        xml.enabled true
+    }
+}
+
+
+
 
 sonarqube {
   properties {
     property "sonar.projectKey", "AISSProjects22_zxcvbn4j"
     property "sonar.organization", "aissprojects22"
     property "sonar.host.url", "https://sonarcloud.io"
+    property "sonar.coverage.jacoco.xmlReportPaths", "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
     property "sonar.login", "<TOKEN>"
   }
 }
