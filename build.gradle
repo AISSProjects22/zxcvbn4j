@@ -8,6 +8,10 @@ buildscript {
     }
 }
 
+plugins {
+  id "org.sonarqube" version "3.3"
+}
+
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'net.saliman.cobertura'
@@ -145,4 +149,13 @@ test {
     maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
     forkEvery = 4
     testLogging.showStandardStreams = true
+}
+
+sonarqube {
+  properties {
+    property "sonar.projectKey", "AISSProjects22_zxcvbn4j"
+    property "sonar.organization", "aissprojects22"
+    property "sonar.host.url", "https://sonarcloud.io"
+    property "sonar.login", "<TOKEN>"
+  }
 }
